@@ -9,86 +9,108 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 /**
- * Controller for handling HTTP requests related to waste categories.
- * Provides CRUD operations for managing waste categories in the system.
+ * REST controller for managing waste categories.
+ * Provides endpoints for CRUD operations on waste categories in the system.
  */
 @RestController
-@RequestMapping("/api/waste-category")
-public class WasteCategoryCtrl {
+@RequestMapping("/api/waste-categories")
+public class WasteCategoryController {
+
 
     private final WasteCategoryService wasteCategoryService;
 
     /**
-     * Constructor for injecting WasteCategoryService.
+     * Constructor for injecting the WasteCategoryService.
      *
-     * @param wasteCategoryService The service for managing waste categories.
+     * @param wasteCategoryService the service for managing waste categories.
      */
     @Autowired
-    public WasteCategoryCtrl(WasteCategoryService wasteCategoryService) {
+    public WasteCategoryController(WasteCategoryService wasteCategoryService) {
         this.wasteCategoryService = wasteCategoryService;
     }
 
     /**
      * Retrieves all waste categories.
      *
-     * @return A list of all waste categories.
+     * @return ResponseEntity containing a list of all waste categories.
      */
     @GetMapping
-    public List<WasteCategory> getAllWasteCategories() {
-        return wasteCategoryService.getAllWasteCategories();
+    public ResponseEntity<List<WasteCategory>> getAllWasteCategories() {
+        List<WasteCategory> categories = wasteCategoryService.getAllWasteCategories();
+        return ResponseEntity.ok(categories);
     }
+
+
 
     /**
      * Retrieves a specific waste category by its ID.
      *
-     * @param id The ID of the waste category to retrieve.
+     * @param id the ID of the waste category to retrieve.
      * @return ResponseEntity containing the waste category if found, or 404 if not found.
      */
     @GetMapping("/{id}")
     public ResponseEntity<WasteCategory> getWasteCategoryById(@PathVariable Long id) {
-        return wasteCategoryService.getWasteCategoryById(id)
-                .map(category -> ResponseEntity.ok(category))
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    /**
-     * Creates a new waste category.
-     *
-     * @param wasteCategory The waste category to create.
-     * @return The created waste category.
-     */
-    @PostMapping
-    public WasteCategory createWasteCategory(@RequestBody WasteCategory wasteCategory) {
-        return wasteCategoryService.createWasteCategory(wasteCategory);
-    }
-
-    /**
-     * Updates an existing waste category by its ID.
-     *
-     * @param id The ID of the waste category to update.
-     * @param wasteCategory The updated waste category details.
-     * @return ResponseEntity containing the updated waste category if found, or 404 if not found.
-     */
-    @PutMapping("/{id}")
-    public ResponseEntity<WasteCategory> updateWasteCategory(
-            @PathVariable Long id, @RequestBody WasteCategory wasteCategory) {
-        return wasteCategoryService.updateWasteCategory(id, wasteCategory)
-                .map(category -> ResponseEntity.ok(category))
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    /**
-     * Deletes a specific waste category by its ID.
-     *
-     * @param id The ID of the waste category to delete.
-     * @return ResponseEntity with 204 status if deleted, or 404 if not found.
-     */
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteWasteCategory(@PathVariable Long id) {
-        if (wasteCategoryService.deleteWasteCategory(id)) {
-            return ResponseEntity.noContent().build();
+        WasteCategory category = wasteCategoryService.getWasteCategoryById(id);
+        if (category != null) {
+            return ResponseEntity.ok(category);
         } else {
             return ResponseEntity.notFound().build();
         }
     }
+
+
+    /**
+     * Creates a new waste category.
+     *
+     * @param wasteCategory the waste category to create.
+     * @return ResponseEntity containing the created waste category.
+     */
+    @PostMapping
+    public ResponseEntity<WasteCategory> createWasteCategory(@RequestBody WasteCategory wasteCategory) {
+        wasteCategoryService.addWasteCategory(wasteCategory); // Use addWasteCategory from the service
+        return ResponseEntity.ok(wasteCategory);
+    }
+
+    /**
+     * Updates an existing waste category.
+     *
+     * @param wasteCategory the updated waste category details.
+     * @return ResponseEntity containing the updated waste category if found, or 404 if not found.
+     */
+    @PutMapping
+    public ResponseEntity<WasteCategory> updateWasteCategory(@RequestBody WasteCategory wasteCategory) {
+        // Call the service method to update the category
+        WasteCategory updatedCategory = wasteCategoryService.updateWasteCategory(wasteCategory);
+
+        // Return a ResponseEntity with the updated category or a 404 status
+        return updatedCategory != null
+                ? ResponseEntity.ok(updatedCategory)
+                : ResponseEntity.notFound().build();
+    }
+
+
+//    /**
+//     * Deletes a specific waste category by its ID.
+//     *
+//     * @param id the ID of the waste category to delete.
+//     * @return ResponseEntity with a 204 status if deleted, or 404 if not found.
+//     */
+//    @DeleteMapping("/{id}")
+//    public ResponseEntity<Void> deleteWasteCategory(@PathVariable Long id) {
+//        boolean isDeleted = wasteCategoryService.deleteWasteCategory(id);
+//        return isDeleted ? ResponseEntity.noContent().build() : ResponseEntity.notFound().build();
+//    }
+
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteWasteCategory(@PathVariable Long id) {
+        boolean isDeleted = wasteCategoryService.deleteWasteCategory(id);
+        if (isDeleted) {
+            return ResponseEntity.ok("Waste category with ID " + id + " deleted successfully.");
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
 }
