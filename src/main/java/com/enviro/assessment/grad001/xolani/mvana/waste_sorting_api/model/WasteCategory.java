@@ -1,6 +1,5 @@
-package com.enviro.assessment.grad001.xolani.mvana.waste_sorting_api;
+package com.enviro.assessment.grad001.xolani.mvana.waste_sorting_api.model;
 
-import com.enviro.assessment.grad001.xolani.mvana.waste_sorting_api.model.DisposalGuideline;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -53,6 +52,7 @@ public class WasteCategory {
     }
 
     public List<DisposalGuideline> getDisposalGuidelines() {
+
         return disposalGuidelines;
     }
 
