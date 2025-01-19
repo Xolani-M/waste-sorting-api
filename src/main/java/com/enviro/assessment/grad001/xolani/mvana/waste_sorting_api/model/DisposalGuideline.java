@@ -1,4 +1,4 @@
-package com.enviro.assessment.grad001.xolanimvana.model;
+package com.enviro.assessment.grad001.xolani.mvana.waste_sorting_api.model;
 
 import jakarta.persistence.*;
 
@@ -20,6 +20,24 @@ public class DisposalGuideline {
     @ManyToOne
     @JoinColumn(name = "waste_category_id", nullable = false)
     private WasteCategory wasteCategory;
+
+    /**
+     * Default constructor required by JPA.
+     */
+    public DisposalGuideline() {
+    }
+
+
+    /**
+     * Parameterized constructor for initializing with an instruction.
+     *
+     * @param instruction the disposal instruction
+     */
+    public DisposalGuideline(String instruction) {
+        this.instruction = instruction;
+    }
+
+
 
     // Getters and setters
     public Long getId() {
