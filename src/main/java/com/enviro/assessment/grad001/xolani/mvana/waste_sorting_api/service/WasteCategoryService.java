@@ -6,72 +6,46 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
+/**
+ * Service for managing waste categories.
+ */
 @Service
 public class WasteCategoryService {
 
+    private final WasteCategoryRepo wasteCategoryRepository;
+
     @Autowired
-    WasteCategoryRepo wasteCategoryRepo;
+    public WasteCategoryService(WasteCategoryRepo wasteCategoryRepository) {
+        this.wasteCategoryRepository = wasteCategoryRepository;
+    }
 
-
-    /**
-     * Retrieve all waste categories.
-     * @return a list of waste categories.
-     */
     public List<WasteCategory> getAllWasteCategories() {
-        return wasteCategoryRepo.findAll();
+        return wasteCategoryRepository.findAll();
     }
 
-    /**
-     * Adds a new waste category.
-     *
-     * @param wasteCategory the waste category to add.
-     * @return the saved WasteCategory.
-     */
+    public Optional<WasteCategory> getWasteCategoryById(Integer id) {
+        return wasteCategoryRepository.findById(id);
+    }
+
     public WasteCategory addWasteCategory(WasteCategory wasteCategory) {
-        return wasteCategoryRepo.save(wasteCategory);
+        return wasteCategoryRepository.save(wasteCategory);
     }
 
-
-    /**
-     * Retrieve a waste category by its ID.
-     *
-     * @param id the ID of the waste category to retrieve.
-     * @return the WasteCategory if found, or null if not found.
-     */
-    public WasteCategory getWasteCategoryById(int id) {
-        return wasteCategoryRepo.findById(id).orElse(new WasteCategory());
+    public Optional<WasteCategory> updateWasteCategory(Integer id, WasteCategory updatedCategory) {
+        return wasteCategoryRepository.findById(id).map(existingCategory -> {
+            existingCategory.setName(updatedCategory.getName());
+            existingCategory.setDescription(updatedCategory.getDescription());
+            return wasteCategoryRepository.save(existingCategory);
+        });
     }
 
-
-    /**
-     * Updates an existing waste category.
-     *
-     * @param updatedCategory the updated waste category details.
-     * @return the updated WasteCategory or null if not found.
-     */
-    public WasteCategory updateWasteCategory(WasteCategory updatedCategory) {
-        if (wasteCategoryRepo.existsById(updatedCategory.getId())) {
-            return wasteCategoryRepo.save(updatedCategory);
-        }
-        return null;
-    }
-
-
-    /**
-     * Deletes a waste category by its ID.
-     *
-     * @param id the ID of the waste category to delete.
-     * @return true if the category was deleted, false otherwise.
-     */
-    public boolean deleteWasteCategory(int id) {
-        if (wasteCategoryRepo.existsById(id)) {
-            wasteCategoryRepo.deleteById(id);
+    public boolean deleteWasteCategory(Integer id) {
+        if (wasteCategoryRepository.existsById(id)) {
+            wasteCategoryRepository.deleteById(id);
             return true;
         }
         return false;
     }
-
-
-
 }
