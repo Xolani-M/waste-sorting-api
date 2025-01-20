@@ -427,7 +427,7 @@ http://localhost:9000/h2-console
 ---
 
 ## Contact 📧
-Project Maintainer: Xolani
+Project Maintainer: Xolani the sageNinja   
 Email: nathanielmvana@gmail.com  
 LinkedIn: www.linkedin.com/in/xolani-mvana-3ba0a616b
 
