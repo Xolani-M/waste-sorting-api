@@ -4,8 +4,23 @@
 The Waste Sorting API is a Spring Boot application developed for Enviro365, designed to promote sustainable waste management practices. It serves as the backend system for a mobile application that provides guidance on proper waste disposal techniques and encourages recycling habits.
 
 ![Spring Boot Version](https://img.shields.io/badge/Spring%20Boot-3.4.1-brightgreen.svg)  
-![Java](https://img.shields.io/badge/Java-17-orange.svg)  
-![License](https://img.shields.io/badge/License-MIT-blue.svg)
+![Java](https://img.shields.io/badge/Java-17-orange.svg)
+![Maven](https://img.shields.io/badge/Maven-3.6.0-blue)
+![H2 Database](https://img.shields.io/badge/Database-H2%20In--Memory-yellowgreen.svg)
+![Swagger](https://img.shields.io/badge/Swagger-UI%20Available-brightblue.svg)
+![Spring Boot Actuator](https://img.shields.io/badge/Spring%20Boot%20Actuator-Enabled-orange.svg)
+![API Version](https://img.shields.io/badge/API%20Version-v1.0.0-brightgreen)
+![Commit Activity](https://img.shields.io/github/commit-activity/w/Xolani-M/waste-sorting-api)
+![Platform](https://img.shields.io/badge/Platform-Linux%20%2F%20Windows%20%2F%20macOS-brightgreen)
+![License](https://img.shields.io/badge/License-Dummy%20License-blue.svg)
+![Port](https://img.shields.io/badge/Port-9000-blue.svg)
+
+
+
+
+
+
+
 
 ---
 
