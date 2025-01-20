@@ -1,10 +1,11 @@
-HELP.md
-target/
+# Ignore Maven build directories
+/target/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-### STS ###
+# Ignore IDE specific files
+# Spring Tool Suite
 .apt_generated
 .classpath
 .factorypath
@@ -13,13 +14,13 @@ target/
 .springBeans
 .sts4-cache
 
-### IntelliJ IDEA ###
-.idea
+# IntelliJ IDEA
+.idea/
 *.iws
 *.iml
 *.ipr
 
-### NetBeans ###
+# NetBeans
 /nbproject/private/
 /nbbuild/
 /dist/
@@ -29,5 +30,31 @@ build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
-### VS Code ###
+# VS Code
 .vscode/
+
+# Ignore OS-specific files
+.DS_Store       # macOS
+Thumbs.db       # Windows
+
+# Ignore Maven wrapper files (optional, if not needed)
+mvnw
+mvnw.cmd
+
+# Ignore generated log files
+*.log
+
+# Ignore application properties if it contains sensitive data
+/src/main/resources/application.properties
+
+# Ignore other generated files
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.tar
+
+# Ignore build output files
+*.class
+*.log
