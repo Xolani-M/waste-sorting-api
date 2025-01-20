@@ -407,7 +407,7 @@ http://localhost:9000/h2-console
 ---
 
 ## License 📝
-[MIT License](LICENSE)
+[Dummy Licence](LICENSE)
 
 ---
 
