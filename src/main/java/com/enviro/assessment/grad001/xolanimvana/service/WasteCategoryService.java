@@ -1,51 +1,58 @@
-package com.enviro.assessment.grad001.xolani.mvana.waste_sorting_api.service;
+package com.enviro.assessment.grad001.xolanimvana.service;
 
-import com.enviro.assessment.grad001.xolani.mvana.waste_sorting_api.model.WasteCategory;
-import com.enviro.assessment.grad001.xolani.mvana.waste_sorting_api.repository.WasteCategoryRepo;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.enviro.assessment.grad001.xolanimvana.dto.WasteCategoryDTO;
+import com.enviro.assessment.grad001.xolanimvana.exception.ResourceNotFoundException;
+import com.enviro.assessment.grad001.xolanimvana.model.WasteCategory;
+import com.enviro.assessment.grad001.xolanimvana.repository.WasteCategoryRepo;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Optional;
 
-/**
- * Service for managing waste categories.
- */
 @Service
+@RequiredArgsConstructor
 public class WasteCategoryService {
 
-    private final WasteCategoryRepo wasteCategoryRepository;
+    private final WasteCategoryRepo wasteCategoryRepo;
 
-    @Autowired
-    public WasteCategoryService(WasteCategoryRepo wasteCategoryRepository) {
-        this.wasteCategoryRepository = wasteCategoryRepository;
+    @Transactional(readOnly = true)
+    public List<WasteCategoryDTO> getAllWasteCategories() {
+        return wasteCategoryRepo.findAll().stream()
+                .map(WasteCategoryDTO::fromEntity)
+                .toList(); // More efficient than `collect(Collectors.toList())`
     }
 
-    public List<WasteCategory> getAllWasteCategories() {
-        return wasteCategoryRepository.findAll();
+    @Transactional(readOnly = true)
+    public WasteCategoryDTO getWasteCategoryById(Long id) {
+        WasteCategory category = wasteCategoryRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("WasteCategory", id));
+        return WasteCategoryDTO.fromEntity(category);
     }
 
-    public Optional<WasteCategory> getWasteCategoryById(Integer id) {
-        return wasteCategoryRepository.findById(id);
+    @Transactional
+    public WasteCategoryDTO createWasteCategory(WasteCategoryDTO wasteCategoryDTO) {
+        WasteCategory category = wasteCategoryDTO.toEntity();
+        WasteCategory savedCategory = wasteCategoryRepo.save(category);
+        return WasteCategoryDTO.fromEntity(savedCategory);
     }
 
-    public WasteCategory addWasteCategory(WasteCategory wasteCategory) {
-        return wasteCategoryRepository.save(wasteCategory);
+    @Transactional
+    public WasteCategoryDTO updateWasteCategory(Long id, WasteCategoryDTO wasteCategoryDTO) {
+        WasteCategory category = wasteCategoryRepo.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("WasteCategory", id));
+
+        category.setName(wasteCategoryDTO.getName());
+        category.setDescription(wasteCategoryDTO.getDescription());
+
+        return WasteCategoryDTO.fromEntity(wasteCategoryRepo.save(category));
     }
 
-    public Optional<WasteCategory> updateWasteCategory(Integer id, WasteCategory updatedCategory) {
-        return wasteCategoryRepository.findById(id).map(existingCategory -> {
-            existingCategory.setName(updatedCategory.getName());
-            existingCategory.setDescription(updatedCategory.getDescription());
-            return wasteCategoryRepository.save(existingCategory);
-        });
-    }
-
-    public boolean deleteWasteCategory(Integer id) {
-        if (wasteCategoryRepository.existsById(id)) {
-            wasteCategoryRepository.deleteById(id);
-            return true;
+    @Transactional
+    public void deleteWasteCategory(Long id) {
+        if (!wasteCategoryRepo.existsById(id)) {
+            throw new ResourceNotFoundException("WasteCategory", id);
         }
-        return false;
+        wasteCategoryRepo.deleteById(id);
     }
 }
