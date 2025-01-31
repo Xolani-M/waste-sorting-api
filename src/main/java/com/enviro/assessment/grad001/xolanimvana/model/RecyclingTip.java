@@ -1,6 +1,6 @@
 package com.enviro.assessment.grad001.xolanimvana.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -17,31 +17,29 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "recycling_tips")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Builder
 @EntityListeners(AuditingEntityListener.class) // Enables auditing fields
 public class RecyclingTip {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-generates the primary key
-    private Long id; // Changed from Integer to Long for better scalability
+    private Long id;
 
-    @Column(nullable = false) // Ensures "tip" is not null
-    @NotBlank(message = "Tip cannot be blank") // Validates non-blank input
-    @Size(max = 255, message = "Tip cannot exceed 255 characters") // Restricts length
+    @Column(nullable = false, length = 255) // Ensures tip is not null and limits length
+    @NotBlank(message = "Tip cannot be blank")
+    @Size(max = 255, message = "Tip cannot exceed 255 characters")
     private String tip;
 
-    @Column(length = 500) // Limits the maximum length for "description"
-    @Size(max = 500, message = "Description cannot exceed 500 characters") // Validates length
+    @Column(length = 500) // Limits the maximum length for description
+    @Size(max = 500, message = "Description cannot exceed 500 characters")
     private String description;
 
     @ManyToOne(fetch = FetchType.LAZY) // Fetch WasteCategory lazily to optimize performance
     @JoinColumn(name = "waste_category_id", nullable = false) // Foreign key linking to WasteCategory
-    @JsonIgnore // ✅ Prevents infinite recursion when serializing RecyclingTip
+    @JsonBackReference // Prevents infinite recursion when serializing
     private WasteCategory wasteCategory;
 
     @CreatedDate
@@ -53,7 +51,7 @@ public class RecyclingTip {
     private LocalDateTime updatedAt;
 
     /**
-     * Constructor for initializing RecyclingTip with a waste category.
+     * Constructor for initializing a recycling tip with a tip, description, and waste category.
      *
      * @param tip          the main recycling tip
      * @param description  additional information or context
