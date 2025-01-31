@@ -46,6 +46,9 @@ public class DisposalGuideline {
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
 
+    @Column(length = 500)
+    private String guideline;
+
     /**
      * Constructor for initializing a disposal guideline with an instruction and waste category.
      *
