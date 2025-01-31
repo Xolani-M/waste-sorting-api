@@ -1,8 +1,15 @@
-package com.enviro.assessment.grad001.xolani.mvana.waste_sorting_api.model;
+package com.enviro.assessment.grad001.xolanimvana.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDateTime;
 
 /**
  * Represents a recycling tip entity for the waste sorting application.
@@ -10,11 +17,18 @@ import jakarta.validation.constraints.Size;
  */
 @Entity
 @Table(name = "recycling_tips")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@Builder
+@EntityListeners(AuditingEntityListener.class) // Enables auditing fields
 public class RecyclingTip {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-generates the primary key
-    private Integer id;
+    private Long id; // Changed from Integer to Long for better scalability
 
     @Column(nullable = false) // Ensures "tip" is not null
     @NotBlank(message = "Tip cannot be blank") // Validates non-blank input
@@ -25,43 +39,29 @@ public class RecyclingTip {
     @Size(max = 500, message = "Description cannot exceed 500 characters") // Validates length
     private String description;
 
-    // Default constructor required by JPA
-    public RecyclingTip() {}
+    @ManyToOne(fetch = FetchType.LAZY) // Fetch WasteCategory lazily to optimize performance
+    @JoinColumn(name = "waste_category_id", nullable = false) // Foreign key linking to WasteCategory
+    @JsonIgnore // ✅ Prevents infinite recursion when serializing RecyclingTip
+    private WasteCategory wasteCategory;
+
+    @CreatedDate
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     /**
-     * Parameterized constructor for initializing RecyclingTip.
+     * Constructor for initializing RecyclingTip with a waste category.
      *
-     * @param tip         the main recycling tip
-     * @param description additional information or context
+     * @param tip          the main recycling tip
+     * @param description  additional information or context
+     * @param wasteCategory the associated waste category
      */
-    public RecyclingTip(String tip, String description) {
+    public RecyclingTip(String tip, String description, WasteCategory wasteCategory) {
         this.tip = tip;
         this.description = description;
-    }
-
-    // Getters and Setters
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getTip() {
-        return tip;
-    }
-
-    public void setTip(String tip) {
-        this.tip = tip;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+        this.wasteCategory = wasteCategory;
     }
 }
