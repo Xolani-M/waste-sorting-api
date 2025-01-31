@@ -1,6 +1,7 @@
 package com.enviro.assessment.grad001.xolanimvana.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -14,11 +15,9 @@ import java.util.List;
  */
 @Entity
 @Table(name = "waste_categories")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 public class WasteCategory {
 
     @Id
@@ -34,11 +33,11 @@ public class WasteCategory {
     private String description;
 
     @OneToMany(mappedBy = "wasteCategory", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JsonIgnore
+    @JsonManagedReference
     private List<DisposalGuideline> disposalGuidelines = new ArrayList<>();
 
     @OneToMany(mappedBy = "wasteCategory", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
-    @JsonIgnore
+    @JsonManagedReference
     private List<RecyclingTip> recyclingTips = new ArrayList<>();
 
     /**
