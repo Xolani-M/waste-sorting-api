@@ -1,4 +1,4 @@
-package com.enviro.assessment.grad001.xolani.mvana.waste_sorting_api.controller;
+package com.enviro.assessment.grad001.xolanimvana.controller;
 
 public class WasteCategoryControllerTest {
 }

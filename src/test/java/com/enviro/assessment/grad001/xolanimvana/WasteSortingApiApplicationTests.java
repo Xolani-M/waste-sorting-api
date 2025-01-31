@@ -1,4 +1,4 @@
-package com.enviro.assessment.grad001.xolani.mvana.waste_sorting_api;
+package com.enviro.assessment.grad001.xolanimvana;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
