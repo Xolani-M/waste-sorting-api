@@ -117,16 +117,21 @@ The Waste Sorting API is a Spring Boot application developed for Enviro365, desi
 src/
 ├── main/
 │   ├── java/
-│   │   └── com/enviro/assessment/grad001/xolani/mvana/waste_sorting_api/
+│   │   └── com/enviro/assessment/grad001/xolanimvana/
+│   │       ├── config/
+│   │       │   ├── AuditingConfig.java
+│   │       │   └── CustomLocalDateTimeSerializer.java
 │   │       ├── controller/
 │   │       │   ├── DisposalGuidelineController.java
-│   │       │   ├── HomeController.java
 │   │       │   ├── RecyclingTipController.java
 │   │       │   └── WasteCategoryController.java
 │   │       ├── dto/
 │   │       │   ├── DisposalGuidelineDTO.java
 │   │       │   ├── RecyclingTipDTO.java
 │   │       │   └── WasteCategoryDTO.java
+│   │       ├── exception/
+│   │       │   ├── GlobalExceptionHandler.java
+│   │       │   └── ResourceNotFoundException.java
 │   │       ├── model/
 │   │       │   ├── DisposalGuideline.java
 │   │       │   ├── RecyclingTip.java
@@ -140,11 +145,15 @@ src/
 │   │           ├── RecyclingTipService.java
 │   │           └── WasteCategoryService.java
 │   └── resources/
-│       └── application.properties
+│       ├── application.properties
+│       ├── static/
+│       └── templates/
 └── test/
     └── java/
-        └── com/enviro/assessment/grad001/xolani/mvana/waste_sorting_api/
-            └── [test classes]
+        └── com/enviro/assessment/grad001/xolanimvana/
+            ├── controller/
+            │   └── WasteCategoryControllerTest.java
+            └── WasteSortingApiApplicationTests.java
 ```
 
 ---
