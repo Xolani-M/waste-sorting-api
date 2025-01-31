@@ -1,40 +1,41 @@
-package com.enviro.assessment.grad001.xolani.mvana.waste_sorting_api.dto;
+package com.enviro.assessment.grad001.xolanimvana.dto;
 
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Size;
+import com.enviro.assessment.grad001.xolanimvana.model.RecyclingTip;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import lombok.*;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class RecyclingTipDTO {
-
-    private Integer id;
-
-    @NotBlank(message = "Tip cannot be blank")
-    @Size(max = 255, message = "Tip cannot exceed 255 characters")
+    private Long id;
     private String tip;
-
-    @Size(max = 500, message = "Description cannot exceed 500 characters")
     private String description;
+    private Long wasteCategoryId;
 
-    public Integer getId() {
-        return id;
+    public static RecyclingTipDTO fromEntity(RecyclingTip entity) {
+        return RecyclingTipDTO.builder()
+                .id(entity.getId())
+                .tip(entity.getTip())
+                .description(entity.getDescription())
+                .wasteCategoryId(entity.getWasteCategory().getId())
+                .build();
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public static RecyclingTipDTO createDefault() {
+        return RecyclingTipDTO.builder()
+                .tip("No tips available")
+                .build();
     }
 
-    public String getTip() {
-        return tip;
-    }
-
-    public void setTip(String tip) {
-        this.tip = tip;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+    public RecyclingTip toEntity() {
+        RecyclingTip entity = new RecyclingTip();
+        entity.setId(this.id);
+        entity.setTip(this.tip);
+        entity.setDescription(this.description);
+        return entity;
     }
 }
