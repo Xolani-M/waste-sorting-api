@@ -1,6 +1,6 @@
 package com.enviro.assessment.grad001.xolanimvana.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -17,27 +17,25 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "disposal_guidelines")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
 @Builder
 @EntityListeners(AuditingEntityListener.class) // Enables auditing fields
 public class DisposalGuideline {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Automatically generates the primary key
-    private Long id; // Changed from Integer to Long for better scalability
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // Auto-generates the primary key
+    private Long id;
 
-    @Column(nullable = false) // Ensures the "instruction" column is not null
-    @NotBlank(message = "Instruction cannot be blank") // Validates that "instruction" is not empty or null
-    @Size(max = 500, message = "Instruction cannot exceed 500 characters") // Limits instruction length
+    @Column(nullable = false, length = 500) // Ensures instruction is not null and limits its length
+    @NotBlank(message = "Instruction cannot be blank")
+    @Size(max = 500, message = "Instruction cannot exceed 500 characters")
     private String instruction;
 
     @ManyToOne(fetch = FetchType.LAZY) // Fetch WasteCategory lazily to optimize performance
     @JoinColumn(name = "waste_category_id", nullable = false) // Foreign key linking to WasteCategory
-    @JsonIgnore // ✅ Prevents infinite recursion in JSON responses
+    @JsonBackReference // Prevents infinite recursion when serializing
     private WasteCategory wasteCategory;
 
     @CreatedDate
@@ -49,7 +47,7 @@ public class DisposalGuideline {
     private LocalDateTime updatedAt;
 
     /**
-     * Constructor for initializing with an instruction and waste category.
+     * Constructor for initializing a disposal guideline with an instruction and waste category.
      *
      * @param instruction   the disposal instruction
      * @param wasteCategory the associated waste category
