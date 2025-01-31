@@ -1,7 +1,15 @@
-package com.enviro.assessment.grad001.xolani.mvana.waste_sorting_api.model;
+package com.enviro.assessment.grad001.xolanimvana.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import java.time.LocalDateTime;
 
 /**
  * Represents a disposal guideline entity for the waste sorting application.
@@ -9,88 +17,45 @@ import jakarta.validation.constraints.NotBlank;
  */
 @Entity
 @Table(name = "disposal_guidelines")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@ToString
+@Builder
+@EntityListeners(AuditingEntityListener.class) // Enables auditing fields
 public class DisposalGuideline {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // Automatically generates the primary key
-    private Integer id;
+    private Long id; // Changed from Integer to Long for better scalability
 
     @Column(nullable = false) // Ensures the "instruction" column is not null
     @NotBlank(message = "Instruction cannot be blank") // Validates that "instruction" is not empty or null
+    @Size(max = 500, message = "Instruction cannot exceed 500 characters") // Limits instruction length
     private String instruction;
 
     @ManyToOne(fetch = FetchType.LAZY) // Fetch WasteCategory lazily to optimize performance
     @JoinColumn(name = "waste_category_id", nullable = false) // Foreign key linking to WasteCategory
+    @JsonIgnore // ✅ Prevents infinite recursion in JSON responses
     private WasteCategory wasteCategory;
 
-    /**
-     * Default constructor required by JPA.
-     */
-    public DisposalGuideline() {
-    }
+    @CreatedDate
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @LastModifiedDate
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
 
     /**
-     * Parameterized constructor for initializing with an instruction.
+     * Constructor for initializing with an instruction and waste category.
      *
-     * @param instruction the disposal instruction
+     * @param instruction   the disposal instruction
+     * @param wasteCategory the associated waste category
      */
-    public DisposalGuideline(String instruction) {
+    public DisposalGuideline(String instruction, WasteCategory wasteCategory) {
         this.instruction = instruction;
-    }
-
-    // Getters and Setters
-
-    /**
-     * Gets the unique identifier of the disposal guideline.
-     *
-     * @return the unique identifier
-     */
-    public Integer getId() {
-        return id;
-    }
-
-    /**
-     * Sets the unique identifier for the disposal guideline.
-     *
-     * @param id the unique identifier to set
-     */
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    /**
-     * Gets the disposal instruction.
-     *
-     * @return the disposal instruction
-     */
-    public String getInstruction() {
-        return instruction;
-    }
-
-    /**
-     * Sets the disposal instruction.
-     *
-     * @param instruction the disposal instruction to set
-     */
-    public void setInstruction(String instruction) {
-        this.instruction = instruction;
-    }
-
-    /**
-     * Gets the associated waste category for the disposal guideline.
-     *
-     * @return the associated WasteCategory
-     */
-    public WasteCategory getWasteCategory() {
-        return wasteCategory;
-    }
-
-    /**
-     * Sets the associated waste category for the disposal guideline.
-     *
-     * @param wasteCategory the WasteCategory to associate
-     */
-    public void setWasteCategory(WasteCategory wasteCategory) {
         this.wasteCategory = wasteCategory;
     }
 }
